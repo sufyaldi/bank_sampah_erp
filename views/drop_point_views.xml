@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sampah_drop_point_tree" model="ir.ui.view">
+        <field name="name">sirita.sampah.drop.point.tree</field>
+        <field name="model">sirita.sampah.drop.point</field>
+        <field name="arch" type="xml">
+            <list string="Titik Drop Point">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="address"/>
+                <field name="operating_hours"/>
+                <field name="capacity_status" widget="badge" decoration-success="capacity_status == 'aman'" decoration-warning="capacity_status == 'hampir_penuh'" decoration-danger="capacity_status == 'penuh'"/>
+                <field name="is_active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sampah_drop_point_form" model="ir.ui.view">
+        <field name="name">sirita.sampah.drop.point.form</field>
+        <field name="model">sirita.sampah.drop.point</field>
+        <field name="arch" type="xml">
+            <form string="Titik Drop Point">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Nama Titik Drop Point"/>
+                        <h1><field name="name" placeholder="contoh: Drop Point Gedung Rektorat"/></h1>
+                    </div>
+                    <group>
+                        <group string="Informasi Lokasi">
+                            <field name="code"/>
+                            <field name="address"/>
+                            <field name="operating_hours"/>
+                        </group>
+                        <group string="Status &amp; Koordinat GPS">
+                            <field name="capacity_status"/>
+                            <field name="latitude"/>
+                            <field name="longitude"/>
+                            <field name="is_active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Keterangan &amp; Petunjuk Arah">
+                            <field name="notes" placeholder="Patokan lokasi, kontak pengawas, dll..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sampah_drop_point" model="ir.actions.act_window">
+        <field name="name">Titik Kumpul (Drop Points)</field>
+        <field name="res_model">sirita.sampah.drop.point</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List / Tree View Transaksi -->
+    <record id="view_sampah_transaction_tree" model="ir.ui.view">
+        <field name="name">sirita.sampah.transaction.tree</field>
+        <field name="model">sirita.sampah.transaction</field>
+        <field name="arch" type="xml">
+            <list string="Transaksi Setor Sampah" decoration-info="state == 'draft'" decoration-warning="state in ('dikonfirmasi', 'menuju_lokasi', 'tiba')" decoration-success="state == 'selesai'" decoration-muted="state == 'dibatalkan'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="partner_id"/>
+                <field name="transaction_type" widget="badge"/>
+                <field name="collector_id"/>
+                <field name="total_weight" sum="Total Berat (Kg)"/>
+                <field name="total_points" sum="Total Poin"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state in ('dikonfirmasi', 'menuju_lokasi', 'tiba')" decoration-success="state == 'selesai'" decoration-danger="state == 'dibatalkan'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View Transaksi -->
+    <record id="view_sampah_transaction_form" model="ir.ui.view">
+        <field name="name">sirita.sampah.transaction.form</field>
+        <field name="model">sirita.sampah.transaction</field>
+        <field name="arch" type="xml">
+            <form string="Transaksi Setor Sampah">
+                <header>
+                    <button name="action_confirm" string="Konfirmasi" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_on_the_way" string="Menuju Lokasi" type="object" class="btn-info" invisible="state != 'dikonfirmasi'"/>
+                    <button name="action_arrived" string="Tiba di Lokasi" type="object" class="btn-warning" invisible="state != 'menuju_lokasi'"/>
+                    <button name="action_done" string="Selesai &amp; Tambah Poin" type="object" class="btn-success" invisible="state not in ('draft', 'dikonfirmasi', 'tiba')"/>
+                    <button name="action_cancel" string="Batalkan" type="object" invisible="state in ('selesai', 'dibatalkan')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,dikonfirmasi,selesai"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="No. Transaksi"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Informasi Nasabah">
+                            <field name="partner_id" readonly="state == 'selesai'"/>
+                            <field name="date" readonly="state == 'selesai'"/>
+                            <field name="transaction_type" readonly="state == 'selesai'"/>
+                            <field name="drop_point_id" invisible="transaction_type != 'drop_in'" readonly="state == 'selesai'"/>
+                        </group>
+                        <group string="Petugas &amp; Penjemputan">
+                            <field name="collector_id" readonly="state == 'selesai'"/>
+                            <field name="pickup_address" invisible="transaction_type != 'pickup'" readonly="state == 'selesai'"/>
+                            <field name="pickup_lat" invisible="transaction_type != 'pickup'" readonly="state == 'selesai'"/>
+                            <field name="pickup_lng" invisible="transaction_type != 'pickup'" readonly="state == 'selesai'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Rincian Timbangan Sampah">
+                            <field name="line_ids" readonly="state == 'selesai'">
+                                <list editable="bottom">
+                                    <field name="category_id"/>
+                                    <field name="weight"/>
+                                    <field name="point_rate"/>
+                                    <field name="subtotal_points"/>
+                                    <field name="subtotal_amount_rp" optional="show"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total_weight"/>
+                                <field name="total_points" class="oe_subtotal_footer_separator"/>
+                                <field name="total_amount_rp"/>
+                            </group>
+                        </page>
+                        <page string="Foto Bukti &amp; Catatan">
+                            <group>
+                                <field name="photo_evidence" widget="image" class="oe_avatar" options="{'size': [200, 200]}"/>
+                                <field name="notes" placeholder="Catatan tambahan kondisi sampah atau penimbangan..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <chatter>
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </chatter>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Pivot & Graph View untuk Analisis -->
+    <record id="view_sampah_transaction_pivot" model="ir.ui.view">
+        <field name="name">sirita.sampah.transaction.pivot</field>
+        <field name="model">sirita.sampah.transaction</field>
+        <field name="arch" type="xml">
+            <pivot string="Analisis Transaksi Bank Sampah">
+                <field name="date" interval="month" type="row"/>
+                <field name="transaction_type" type="col"/>
+                <field name="total_weight" type="measure"/>
+                <field name="total_points" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_sampah_transaction_graph" model="ir.ui.view">
+        <field name="name">sirita.sampah.transaction.graph</field>
+        <field name="model">sirita.sampah.transaction</field>
+        <field name="arch" type="xml">
+            <graph string="Tren Penyetoran Sampah" type="bar">
+                <field name="date" interval="month"/>
+                <field name="total_weight" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Action Transaksi -->
+    <record id="action_sampah_transaction" model="ir.actions.act_window">
+        <field name="name">Transaksi Setor Sampah</field>
+        <field name="res_model">sirita.sampah.transaction</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+    </record>
+</odoo>

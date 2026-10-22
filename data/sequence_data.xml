@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequence Transaksi Penimbangan -->
+        <record id="seq_sampah_transaction" model="ir.sequence">
+            <field name="name">Nomor Transaksi Bank Sampah</field>
+            <field name="code">sirita.sampah.transaction</field>
+            <field name="prefix">TRX/%(year)s/%(month)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequence Penugasan Kurir Jemput -->
+        <record id="seq_sampah_pickup_task" model="ir.sequence">
+            <field name="name">Nomor Penugasan Jemput Sampah</field>
+            <field name="code">sirita.sampah.pickup.task</field>
+            <field name="prefix">TASK/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequence Pengajuan Tarik Saldo -->
+        <record id="seq_sampah_withdrawal" model="ir.sequence">
+            <field name="name">Nomor Pengajuan Penarikan Poin</field>
+            <field name="code">sirita.sampah.withdrawal</field>
+            <field name="prefix">WD/%(year)s/%(month)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

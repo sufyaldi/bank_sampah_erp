@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View Kategori Sampah -->
+    <record id="view_sampah_category_tree" model="ir.ui.view">
+        <field name="name">sirita.sampah.category.tree</field>
+        <field name="model">sirita.sampah.category</field>
+        <field name="arch" type="xml">
+            <list string="Kategori Sampah">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="point_per_kg"/>
+                <field name="price_per_kg"/>
+                <field name="transaction_line_count"/>
+                <field name="is_active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View Kategori Sampah -->
+    <record id="view_sampah_category_form" model="ir.ui.view">
+        <field name="name">sirita.sampah.category.form</field>
+        <field name="model">sirita.sampah.category</field>
+        <field name="arch" type="xml">
+            <form string="Kategori Sampah">
+                <sheet>
+                    <field name="icon_image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Nama Kategori Sampah"/>
+                        <h1><field name="name" placeholder="contoh: Plastik Botol PET"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="sequence"/>
+                            <field name="is_active"/>
+                        </group>
+                        <group>
+                            <field name="point_per_kg"/>
+                            <field name="price_per_kg"/>
+                            <field name="transaction_line_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Deskripsi &amp; Panduan Pemilahan">
+                            <field name="description" placeholder="Panduan jenis sampah yang dapat diterima, syarat kebersihan, dsb..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action Kategori Sampah -->
+    <record id="action_sampah_category" model="ir.actions.act_window">
+        <field name="name">Kategori Sampah</field>
+        <field name="res_model">sirita.sampah.category</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tambahkan Kategori Jenis Sampah Baru
+            </p>
+        </field>
+    </record>
+</odoo>

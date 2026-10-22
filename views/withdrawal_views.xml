@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sampah_withdrawal_tree" model="ir.ui.view">
+        <field name="name">sirita.sampah.withdrawal.tree</field>
+        <field name="model">sirita.sampah.withdrawal</field>
+        <field name="arch" type="xml">
+            <list string="Pengajuan Penarikan Poin" decoration-info="state == 'submitted'" decoration-warning="state == 'approved'" decoration-success="state == 'done'" decoration-danger="state == 'rejected'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="partner_id"/>
+                <field name="points_redeemed"/>
+                <field name="amount_rp"/>
+                <field name="payout_method" widget="badge"/>
+                <field name="account_info"/>
+                <field name="state" widget="badge" decoration-info="state == 'submitted'" decoration-warning="state == 'approved'" decoration-success="state == 'done'" decoration-danger="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sampah_withdrawal_form" model="ir.ui.view">
+        <field name="name">sirita.sampah.withdrawal.form</field>
+        <field name="model">sirita.sampah.withdrawal</field>
+        <field name="arch" type="xml">
+            <form string="Pengajuan Penarikan Poin">
+                <header>
+                    <button name="action_approve" string="Setujui Penarikan" type="object" class="btn-primary" invisible="state != 'submitted'"/>
+                    <button name="action_done" string="Tandai Selesai / Terbayar" type="object" class="btn-success" invisible="state != 'approved'"/>
+                    <button name="action_reject" string="Tolak" type="object" class="btn-danger" invisible="state in ('done', 'rejected')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="submitted,approved,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="No. Penarikan"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Nasabah &amp; Saldo">
+                            <field name="partner_id" readonly="state != 'submitted'"/>
+                            <field name="date" readonly="state != 'submitted'"/>
+                            <field name="current_point_balance"/>
+                            <field name="points_redeemed" readonly="state != 'submitted'"/>
+                            <field name="amount_rp"/>
+                        </group>
+                        <group string="Pencairan Dana">
+                            <field name="payout_method" readonly="state != 'submitted'"/>
+                            <field name="account_info" readonly="state != 'submitted'"/>
+                            <field name="account_name" readonly="state != 'submitted'"/>
+                            <field name="approved_by"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Bukti Pencairan &amp; Catatan">
+                            <group>
+                                <field name="transfer_proof" widget="image" class="oe_avatar" options="{'size': [200, 200]}"/>
+                                <field name="notes" placeholder="Catatan pembayaran, referensi struk bank, dsb..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <chatter>
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </chatter>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sampah_withdrawal" model="ir.actions.act_window">
+        <field name="name">Pengajuan Penarikan Poin</field>
+        <field name="res_model">sirita.sampah.withdrawal</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

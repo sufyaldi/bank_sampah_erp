@@ -1,0 +1,13 @@
+id,name,model_id,group_id/id,operation,domain
+access_sampah_category_officer,sirita.sampah.category.officer,sirita.sampah.category,sirita_sampah.group_sirita_sampah_officer,r,
+access_sampah_category_manager,sirita.sampah.category.manager,sirita.sampah.category,sirita_sampah.group_sirita_sampah_manager,crud,
+access_sampah_drop_point_officer,sirita.sampah.drop.point.officer,sirita.sampah.drop.point,sirita_sampah.group_sirita_sampah_officer,r,
+access_sampah_drop_point_manager,sirita.sampah.drop.point.manager,sirita.sampah.drop.point,sirita_sampah.group_sirita_sampah_manager,crud,
+access_sampah_transaction_officer,sirita.sampah.transaction.officer,sirita.sampah.transaction,sirita_sampah.group_sirita_sampah_officer,crud,
+access_sampah_transaction_manager,sirita.sampah.transaction.manager,sirita.sampah.transaction,sirita_sampah.group_sirita_sampah_manager,crud,
+access_sampah_transaction_line_officer,sirita.sampah.transaction.line.officer,sirita.sampah.transaction.line,sirita_sampah.group_sirita_sampah_officer,crud,
+access_sampah_transaction_line_manager,sirita.sampah.transaction.line.manager,sirita.sampah.transaction.line,sirita_sampah.group_sirita_sampah_manager,crud,
+access_sampah_pickup_task_officer,sirita.sampah.pickup.task.officer,sirita.sampah.pickup.task,sirita_sampah.group_sirita_sampah_officer,crud,
+access_sampah_pickup_task_manager,sirita.sampah.pickup.task.manager,sirita.sampah.pickup.task,sirita_sampah.group_sirita_sampah_manager,crud,
+access_sampah_withdrawal_officer,sirita.sampah.withdrawal.officer,sirita.sampah.withdrawal,sirita_sampah.group_sirita_sampah_officer,r,
+access_sampah_withdrawal_manager,sirita.sampah.withdrawal.manager,sirita.sampah.withdrawal,sirita_sampah.group_sirita_sampah_manager,crud,

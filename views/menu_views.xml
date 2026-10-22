@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 1. ROOT MENU BANK SAMPAH -->
+    <menuitem id="menu_sampah_root"
+              name="Bank Sampah"
+              sequence="260"
+              web_icon="sirita_sampah,static/description/icon.png"/>
+
+    <!-- 2. SUB-MENU: OPERASIONAL TRANSAKSI -->
+    <menuitem id="menu_sampah_operational"
+              name="Operasional"
+              parent="menu_sampah_root"
+              sequence="10"/>
+
+    <menuitem id="menu_sampah_transaction"
+              name="Transaksi Setor Sampah"
+              parent="menu_sampah_operational"
+              action="action_sampah_transaction"
+              sequence="10"/>
+
+    <menuitem id="menu_sampah_pickup_task"
+              name="Penugasan Penjemputan"
+              parent="menu_sampah_operational"
+              action="action_sampah_pickup_task"
+              sequence="20"/>
+
+    <menuitem id="menu_sampah_withdrawal"
+              name="Penarikan Saldo Poin"
+              parent="menu_sampah_operational"
+              action="action_sampah_withdrawal"
+              sequence="30"/>
+
+    <!-- 3. SUB-MENU: ANGGOTA & CIVITAS -->
+    <menuitem id="menu_sampah_members"
+              name="Keanggotaan"
+              parent="menu_sampah_root"
+              sequence="20"/>
+
+    <menuitem id="menu_sampah_nasabah"
+              name="Data Nasabah"
+              parent="menu_sampah_members"
+              action="action_sampah_nasabah"
+              sequence="10"/>
+
+    <menuitem id="menu_sampah_petugas"
+              name="Petugas Lapangan"
+              parent="menu_sampah_members"
+              action="action_sampah_petugas"
+              sequence="20"/>
+
+    <!-- 4. SUB-MENU: MASTER DATA & KONFIGURASI -->
+    <menuitem id="menu_sampah_config"
+              name="Master Data"
+              parent="menu_sampah_root"
+              sequence="30"/>
+
+    <menuitem id="menu_sampah_category"
+              name="Kategori Jenis Sampah"
+              parent="menu_sampah_config"
+              action="action_sampah_category"
+              sequence="10"/>
+
+    <menuitem id="menu_sampah_drop_point"
+              name="Titik Drop Point"
+              parent="menu_sampah_config"
+              action="action_sampah_drop_point"
+              sequence="20"/>
+</odoo>

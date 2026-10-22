@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. Kategori Hak Akses Bank Sampah -->
+        <record id="module_category_sirita_sampah" model="ir.module.category">
+            <field name="name">Sirita Bank Sampah</field>
+            <field name="description">Pengaturan akses sistem pengelolaan Bank Sampah IAIN Parepare</field>
+            <field name="sequence">130</field>
+        </record>
+
+        <!-- 2. Privilege Scope Odoo 20 -->
+        <record id="privilege_sirita_sampah" model="res.groups.privilege">
+            <field name="name">Sirita Bank Sampah Privilege</field>
+            <field name="category_id" ref="module_category_sirita_sampah"/>
+        </record>
+
+        <!-- 3. Grup Petugas Lapangan (Officer) -->
+        <record id="group_sirita_sampah_officer" model="res.groups">
+            <field name="name">Petugas Lapangan / Penimbang</field>
+            <field name="privilege_id" ref="privilege_sirita_sampah"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- 4. Grup Pengelola / Manager Bank Sampah -->
+        <record id="group_sirita_sampah_manager" model="res.groups">
+            <field name="name">Pengelola / Manager Bank Sampah</field>
+            <field name="privilege_id" ref="privilege_sirita_sampah"/>
+            <field name="implied_ids" eval="[(4, ref('group_sirita_sampah_officer'))]"/>
+            <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+    </data>
+</odoo>
