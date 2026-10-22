@@ -6,6 +6,7 @@ class ResPartner(models.Model):
 
     is_nasabah_sampah = fields.Boolean(string='Nasabah Bank Sampah', default=False)
     is_petugas_sampah = fields.Boolean(string='Petugas Bank Sampah', default=False)
+    is_admin_sampah = fields.Boolean(string='Admin Bank Sampah', default=False)
     nasabah_code = fields.Char(string='ID / Kode Nasabah')
     point_balance = fields.Float(string='Saldo Poin', default=0.0)
     rupiah_balance = fields.Float(
