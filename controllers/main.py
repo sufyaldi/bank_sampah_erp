@@ -602,6 +602,10 @@ class SiritaSampahApiController(http.Controller):
                 'default_setor_method': data.get('default_setor_method') or 'drop_in',
                 'point_balance': 0.0,
             }
+            if data.get('password'):
+                import hashlib
+                raw_pwd = str(data.get('password')).strip()
+                vals['nasabah_password'] = hashlib.sha256(raw_pwd.encode('utf-8')).hexdigest()
 
             try:
                 new_partner = partner_obj.create(vals)
