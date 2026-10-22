@@ -557,6 +557,77 @@ class SiritaSampahApiController(http.Controller):
                     'role': 'petugas' if p.is_petugas_sampah else 'nasabah',
                 })
             return self._json_response(True, data=data_list)
+
+        elif method == 'POST':
+            data = self._parse_input()
+            email = (data.get('email') or '').strip().lower()
+            name = (data.get('full_name') or data.get('name') or '').strip()
+            phone = (data.get('phone_number') or data.get('phone') or '').strip()
+            role = (data.get('role') or 'nasabah').strip().lower()
+            address = (data.get('address') or '').strip()
+
+            if not email or not name:
+                return self._json_response(False, message='Nama dan email wajib diisi', status=400)
+
+            # Cek apakah partner/nasabah dengan email ini sudah ada
+            existing = partner_obj.search([('email', '=ilike', email)], limit=1)
+            if existing:
+                return self._json_response(False, message='Email sudah terdaftar. Silakan gunakan email lain atau langsung login.', status=400)
+
+            # Generate nasabah_code jika belum ada
+            next_code = partner_obj.search_count([]) + 1
+            nasabah_code = f"NSB-{next_code:04d}"
+
+            vals = {
+                'name': name,
+                'email': email,
+                'phone': phone,
+                'street': address,
+                'is_nasabah_sampah': True if role == 'nasabah' else False,
+                'is_petugas_sampah': True if role == 'petugas' else False,
+                'nasabah_code': nasabah_code,
+                'default_setor_method': data.get('default_setor_method') or 'drop_in',
+                'point_balance': 0.0,
+            }
+
+            try:
+                new_partner = partner_obj.create(vals)
+                _logger.info("Nasabah/Petugas baru berhasil dibuat: %s (%s)", new_partner.name, new_partner.email)
+                return self._json_response(True, message='Pendaftaran berhasil', data={
+                    'id': str(new_partner.id),
+                    'full_name': new_partner.name,
+                    'email': new_partner.email,
+                    'role': 'petugas' if new_partner.is_petugas_sampah else 'nasabah',
+                    'nasabah_code': new_partner.nasabah_code,
+                }, status=201)
+            except Exception as e:
+                _logger.error("Gagal membuat user baru di Odoo: %s", str(e))
+                return self._json_response(False, message=f'Gagal mendaftar: {str(e)}', status=500)
+
+        elif method == 'PUT':
+            data = self._parse_input()
+            user_id = kwargs.get('id') or data.get('id')
+            if not user_id:
+                return self._json_response(False, message='ID User wajib disertakan', status=400)
+
+            partner = partner_obj.search(['|', ('id', '=', int(user_id) if str(user_id).isdigit() else 0), ('nasabah_code', '=', user_id)], limit=1)
+            if not partner:
+                return self._json_response(False, message='User tidak ditemukan', status=404)
+
+            vals = {}
+            if 'full_name' in data:
+                vals['name'] = data['full_name']
+            if 'phone_number' in data:
+                vals['phone'] = data['phone_number']
+            if 'address' in data:
+                vals['street'] = data['address']
+            if 'default_setor_method' in data:
+                vals['default_setor_method'] = data['default_setor_method']
+
+            if vals:
+                partner.write(vals)
+            return self._json_response(True, message='Data profil berhasil diperbarui')
+
         return self._json_response(False, message='Method not allowed', status=405)
 
     # -------------------------------------------------------------
