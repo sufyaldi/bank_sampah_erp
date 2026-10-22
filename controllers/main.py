@@ -147,7 +147,7 @@ class SiritaSampahApiController(http.Controller):
 
         partner_data = {
             'id': str(partner.id),
-            'phone_number': partner.phone or partner.mobile or '',
+            'phone_number': partner.phone or getattr(partner, 'mobile', '') or '',
             'email': partner.email,
             'full_name': partner.name,
             'role': role,
@@ -490,7 +490,7 @@ class SiritaSampahApiController(http.Controller):
                     'id': t.name,
                     'transaction_id': t.transaction_id.name if t.transaction_id else '',
                     'nasabah_name': t.nasabah_id.name if t.nasabah_id else '',
-                    'phone_number': t.nasabah_id.phone or t.nasabah_id.mobile or '',
+                    'phone_number': t.nasabah_id.phone or getattr(t.nasabah_id, 'mobile', '') or '',
                     'nasabah_address': t.pickup_address or '',
                     'scheduled_date': str(t.scheduled_date),
                     'time_slot': t.time_slot or '',
@@ -538,7 +538,7 @@ class SiritaSampahApiController(http.Controller):
                     'id': str(p.id),
                     'full_name': p.name,
                     'email': p.email,
-                    'phone_number': p.phone or p.mobile or '',
+                    'phone_number': p.phone or getattr(p, 'mobile', '') or '',
                     'address': p.street or '',
                     'point_balance': int(p.point_balance),
                     'role': 'petugas' if p.is_petugas_sampah else 'nasabah',
@@ -552,7 +552,7 @@ class SiritaSampahApiController(http.Controller):
                     'id': str(p.id),
                     'full_name': p.name,
                     'email': p.email,
-                    'phone_number': p.phone or p.mobile or '',
+                    'phone_number': p.phone or getattr(p, 'mobile', '') or '',
                     'point_balance': int(p.point_balance),
                     'role': 'petugas' if p.is_petugas_sampah else 'nasabah',
                 })
