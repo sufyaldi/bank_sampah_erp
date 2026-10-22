@@ -145,10 +145,10 @@ class SiritaSampahApiController(http.Controller):
                 return self._json_response(False, message='Email atau password salah', status=401)
 
         role = 'nasabah'
-        if partner.is_petugas_sampah:
-            role = 'petugas'
-        elif user and (user.has_group('sirita_sampah.group_sirita_sampah_manager') or user.has_group('base.group_system')):
+        if getattr(partner, 'is_admin_sampah', False) or (user and (user.has_group('sirita_sampah.group_sirita_sampah_manager') or user.has_group('base.group_system'))):
             role = 'admin'
+        elif partner.is_petugas_sampah:
+            role = 'petugas'
 
         payload = {
             'id': str(partner.id),
