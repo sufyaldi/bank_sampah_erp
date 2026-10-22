@@ -5,7 +5,7 @@ import hmac
 import hashlib
 import base64
 import logging
-from odoo import http, _
+from odoo import http, fields, _
 from odoo.http import request, Response
 
 _logger = logging.getLogger(__name__)
@@ -697,9 +697,29 @@ class SiritaSampahApiController(http.Controller):
 
         if method == 'GET':
             partner_id = kwargs.get('partner_id') or kwargs.get('user_id')
+            email = kwargs.get('email')
             domain = []
             if partner_id:
-                domain.append(('partner_id', '=', int(partner_id) if str(partner_id).isdigit() else 0))
+                partner = None
+                if str(partner_id).isdigit():
+                    partner = request.env['res.partner'].sudo().browse(int(partner_id))
+                if not partner or not partner.exists():
+                    partner = request.env['res.partner'].sudo().search([
+                        '|', ('ref', '=', str(partner_id)),
+                        '|', ('email', '=', str(email or partner_id)),
+                             ('name', 'ilike', str(partner_id))
+                    ], limit=1)
+                
+                if partner and partner.exists():
+                    domain.append(('partner_id', '=', partner.id))
+                else:
+                    return self._json_response(True, data=[])
+            elif email:
+                partner = request.env['res.partner'].sudo().search([('email', '=', str(email))], limit=1)
+                if partner:
+                    domain.append(('partner_id', '=', partner.id))
+                else:
+                    return self._json_response(True, data=[])
             
             attendances = att_obj.search(domain, limit=30, order='check_in desc')
             data_list = []
@@ -720,15 +740,39 @@ class SiritaSampahApiController(http.Controller):
         elif method == 'POST':
             data = self._parse_input()
             partner_id = data.get('partner_id') or data.get('user_id')
+            email = data.get('email')
+            name = data.get('name')
             action = data.get('action') or 'check_in' # 'check_in' or 'check_out'
             lat = float(data.get('latitude') or 0.0)
             lng = float(data.get('longitude') or 0.0)
             location = (data.get('location') or '').strip()
 
-            if not partner_id:
-                return self._json_response(False, message='ID Petugas wajib disertakan', status=400)
+            if not partner_id and not email:
+                return self._json_response(False, message='ID Petugas atau Email wajib disertakan', status=400)
 
-            partner = request.env['res.partner'].sudo().browse(int(partner_id) if str(partner_id).isdigit() else 0)
+            partner = None
+            if partner_id and str(partner_id).isdigit():
+                partner = request.env['res.partner'].sudo().browse(int(partner_id))
+            
+            if not partner or not partner.exists():
+                lookup_terms = []
+                if partner_id:
+                    lookup_terms.extend([('ref', '=', str(partner_id)), ('email', '=', str(partner_id)), ('name', 'ilike', str(partner_id))])
+                if email:
+                    lookup_terms.append(('email', '=', str(email)))
+                if name:
+                    lookup_terms.append(('name', 'ilike', str(name)))
+                
+                # Combine lookup with OR
+                domain = []
+                for idx, term in enumerate(lookup_terms):
+                    if idx > 0:
+                        domain.insert(0, '|')
+                    domain.append(term)
+                
+                if domain:
+                    partner = request.env['res.partner'].sudo().search(domain, limit=1)
+
             if not partner or not partner.exists():
                 return self._json_response(False, message='Petugas tidak ditemukan', status=404)
 
