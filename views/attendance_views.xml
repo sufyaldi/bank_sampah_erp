@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_sampah_attendance_tree" model="ir.ui.view">
+        <field name="name">sirita.sampah.attendance.tree</field>
+        <field name="model">sirita.sampah.attendance</field>
+        <field name="arch" type="xml">
+            <list string="Absensi Petugas" decoration-success="state == 'in'" decoration-muted="state == 'out'">
+                <field name="date"/>
+                <field name="partner_id"/>
+                <field name="check_in"/>
+                <field name="in_location"/>
+                <field name="check_out"/>
+                <field name="out_location"/>
+                <field name="state" widget="badge" decoration-success="state == 'in'" decoration-info="state == 'out'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_sampah_attendance_form" model="ir.ui.view">
+        <field name="name">sirita.sampah.attendance.form</field>
+        <field name="model">sirita.sampah.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Absensi Petugas Bank Sampah">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="in,out"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Informasi Petugas &amp; Tanggal">
+                            <field name="partner_id"/>
+                            <field name="date"/>
+                        </group>
+                        <group string="Catatan">
+                            <field name="notes" placeholder="Catatan tambahan kehadiran..."/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Absen Masuk (Check-In)">
+                            <field name="check_in"/>
+                            <field name="in_location"/>
+                            <field name="in_latitude"/>
+                            <field name="in_longitude"/>
+                        </group>
+                        <group string="Absen Keluar (Check-Out)">
+                            <field name="check_out"/>
+                            <field name="out_location"/>
+                            <field name="out_latitude"/>
+                            <field name="out_longitude"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="action_sampah_attendance" model="ir.actions.act_window">
+        <field name="name">Presensi / Absensi Petugas</field>
+        <field name="res_model">sirita.sampah.attendance</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Belum ada data presensi/absensi petugas.
+            </p>
+        </field>
+    </record>
+</odoo>

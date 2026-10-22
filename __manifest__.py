@@ -33,6 +33,7 @@ Modul pengelolaan Bank Sampah IAIN Parepare yang terintegrasi dengan ekosistem S
         'views/transaction_views.xml',
         'views/pickup_views.xml',
         'views/withdrawal_views.xml',
+        'views/attendance_views.xml',
         'wizard/reset_password_wizard_views.xml',
         'views/partner_views.xml',
         'views/menu_views.xml',

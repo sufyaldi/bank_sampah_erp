@@ -681,7 +681,106 @@ class SiritaSampahApiController(http.Controller):
         return self._json_response(True, message='Upload berhasil', data={'url': file_url, 'photo_url': file_url, 'avatar_url': file_url})
 
     # -------------------------------------------------------------
-    # 10. AUDIT LOGS, CHATS, REPORTS (FALLBACK)
+    # 10. ATTENDANCE (PRESENSI PETUGAS)
+    # -------------------------------------------------------------
+    @http.route([
+        '/bank_sampah_api/attendance',
+        '/bank_sampah_api/attendance/',
+        '/bank_sampah_api/attendance/index.php'
+    ], type='http', auth='public', methods=['GET', 'POST', 'OPTIONS'], csrf=False, cors='*')
+    def api_attendance(self, **kwargs):
+        if request.httprequest.method == 'OPTIONS':
+            return Response(status=200, headers=self._cors_headers())
+
+        att_obj = request.env['sirita.sampah.attendance'].sudo()
+        method = request.httprequest.method
+
+        if method == 'GET':
+            partner_id = kwargs.get('partner_id') or kwargs.get('user_id')
+            domain = []
+            if partner_id:
+                domain.append(('partner_id', '=', int(partner_id) if str(partner_id).isdigit() else 0))
+            
+            attendances = att_obj.search(domain, limit=30, order='check_in desc')
+            data_list = []
+            for a in attendances:
+                data_list.append({
+                    'id': a.id,
+                    'partner_id': a.partner_id.id,
+                    'partner_name': a.partner_id.name,
+                    'date': str(a.date),
+                    'check_in': a.check_in.strftime('%Y-%m-%d %H:%M:%S') if a.check_in else '',
+                    'check_out': a.check_out.strftime('%Y-%m-%d %H:%M:%S') if a.check_out else '',
+                    'in_location': a.in_location or '',
+                    'out_location': a.out_location or '',
+                    'state': a.state,
+                })
+            return self._json_response(True, data=data_list)
+
+        elif method == 'POST':
+            data = self._parse_input()
+            partner_id = data.get('partner_id') or data.get('user_id')
+            action = data.get('action') or 'check_in' # 'check_in' or 'check_out'
+            lat = float(data.get('latitude') or 0.0)
+            lng = float(data.get('longitude') or 0.0)
+            location = (data.get('location') or '').strip()
+
+            if not partner_id:
+                return self._json_response(False, message='ID Petugas wajib disertakan', status=400)
+
+            partner = request.env['res.partner'].sudo().browse(int(partner_id) if str(partner_id).isdigit() else 0)
+            if not partner or not partner.exists():
+                return self._json_response(False, message='Petugas tidak ditemukan', status=404)
+
+            today = fields.Date.context_today(att_obj)
+            now = fields.Datetime.now()
+
+            # Cari absen hari ini
+            active_att = att_obj.search([
+                ('partner_id', '=', partner.id),
+                ('date', '=', today)
+            ], limit=1, order='id desc')
+
+            if action == 'check_in':
+                if active_att and not active_att.check_out:
+                    return self._json_response(False, message='Anda sudah melakukan absen masuk hari ini.')
+                
+                new_att = att_obj.create({
+                    'partner_id': partner.id,
+                    'date': today,
+                    'check_in': now,
+                    'in_latitude': lat,
+                    'in_longitude': lng,
+                    'in_location': location or 'Kampus IAIN Parepare',
+                })
+                return self._json_response(True, message='Absen masuk berhasil dicatat!', data={
+                    'id': new_att.id,
+                    'check_in': new_att.check_in.strftime('%Y-%m-%d %H:%M:%S'),
+                    'state': new_att.state,
+                })
+
+            elif action == 'check_out':
+                if not active_att:
+                    return self._json_response(False, message='Belum ada riwayat absen masuk untuk hari ini.')
+                if active_att.check_out:
+                    return self._json_response(False, message='Anda sudah melakukan absen keluar hari ini.')
+
+                active_att.write({
+                    'check_out': now,
+                    'out_latitude': lat,
+                    'out_longitude': lng,
+                    'out_location': location or 'Kampus IAIN Parepare',
+                })
+                return self._json_response(True, message='Absen keluar berhasil dicatat!', data={
+                    'id': active_att.id,
+                    'check_out': active_att.check_out.strftime('%Y-%m-%d %H:%M:%S'),
+                    'state': active_att.state,
+                })
+
+            return self._json_response(False, message='Aksi tidak valid (gunakan check_in atau check_out)', status=400)
+
+    # -------------------------------------------------------------
+    # 11. AUDIT LOGS, CHATS, REPORTS (FALLBACK)
     # -------------------------------------------------------------
     @http.route([
         '/bank_sampah_api/audit_logs',

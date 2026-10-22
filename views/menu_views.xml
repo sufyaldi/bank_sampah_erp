@@ -30,6 +30,12 @@
               action="action_sampah_withdrawal"
               sequence="30"/>
 
+    <menuitem id="menu_sampah_attendance"
+              name="Presensi / Absensi Petugas"
+              parent="menu_sampah_operational"
+              action="action_sampah_attendance"
+              sequence="40"/>
+
     <!-- 3. SUB-MENU: ANGGOTA & CIVITAS -->
     <menuitem id="menu_sampah_members"
               name="Keanggotaan"
