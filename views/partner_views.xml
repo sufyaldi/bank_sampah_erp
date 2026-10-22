@@ -5,6 +5,11 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="before">
+                <header>
+                    <button name="action_reset_sampah_password" string="Reset Password Akun" type="object" class="btn-warning" invisible="not is_nasabah_sampah and not is_petugas_sampah"/>
+                </header>
+            </xpath>
             <xpath expr="//notebook" position="inside">
                 <page string="Bank Sampah" name="page_bank_sampah">
                     <group>

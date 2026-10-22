@@ -21,6 +21,7 @@ class ResPartner(models.Model):
     ], string='Metode Setor Favorit', default='drop_in')
     nasabah_latitude = fields.Float(string='Latitude Lokasi Default', digits=(10, 7))
     nasabah_longitude = fields.Float(string='Longitude Lokasi Default', digits=(10, 7))
+    nasabah_password = fields.Char(string='Password Hash Nasabah', copy=False)
 
     transaction_count = fields.Integer(
         string='Total Transaksi Setor',
@@ -45,3 +46,17 @@ class ResPartner(models.Model):
             ])
             partner.transaction_count = len(txs)
             partner.total_waste_kg = sum(tx.total_weight for tx in txs)
+
+    def action_reset_sampah_password(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Reset Kata Sandi Akun',
+            'res_model': 'sampah.reset.password.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_partner_id': self.id,
+            }
+        }
+

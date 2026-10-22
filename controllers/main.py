@@ -131,6 +131,19 @@ class SiritaSampahApiController(http.Controller):
         if not partner:
             return self._json_response(False, message='Email atau password salah', status=401)
 
+        # Verifikasi Password jika partner memiliki nasabah_password atau merupakan user odoo
+        if partner.nasabah_password:
+            import hashlib
+            input_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
+            if input_hash != partner.nasabah_password and password != partner.nasabah_password:
+                return self._json_response(False, message='Email atau password salah', status=401)
+        elif user:
+            try:
+                user_auth = request.env['res.users'].sudo().with_user(user.id)._check_credentials(password, {'interactive': False})
+            except Exception:
+                # Password user Odoo tidak cocok
+                return self._json_response(False, message='Email atau password salah', status=401)
+
         role = 'nasabah'
         if partner.is_petugas_sampah:
             role = 'petugas'
@@ -623,6 +636,10 @@ class SiritaSampahApiController(http.Controller):
                 vals['street'] = data['address']
             if 'default_setor_method' in data:
                 vals['default_setor_method'] = data['default_setor_method']
+            if 'password' in data and data['password']:
+                import hashlib
+                raw_pwd = str(data['password']).strip()
+                vals['nasabah_password'] = hashlib.sha256(raw_pwd.encode('utf-8')).hexdigest()
 
             if vals:
                 partner.write(vals)
