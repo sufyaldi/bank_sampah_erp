@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- 1. ROOT MENU BANK SAMPAH -->
+    <!-- 1. ROOT MENU BANK SAMPAH: Langsung memanggil Client Action Dashboard -->
     <menuitem id="menu_sampah_root"
               name="Bank Sampah"
               sequence="260"
+              action="action_sampah_dashboard"
               web_icon="sirita_sampah,static/description/icon.png"/>
 
     <!-- 2. SUB-MENU: OPERASIONAL TRANSAKSI -->

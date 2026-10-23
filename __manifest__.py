@@ -28,6 +28,7 @@ Modul pengelolaan Bank Sampah IAIN Parepare yang terintegrasi dengan ekosistem S
         'security/ir.access.csv',
         'data/sequence_data.xml',
         'data/default_categories.xml',
+        'views/dashboard_views.xml',
         'views/category_views.xml',
         'views/drop_point_views.xml',
         'views/transaction_views.xml',
@@ -38,6 +39,13 @@ Modul pengelolaan Bank Sampah IAIN Parepare yang terintegrasi dengan ekosistem S
         'views/partner_views.xml',
         'views/menu_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'sirita_sampah/static/src/css/sampah_dashboard.css',
+            'sirita_sampah/static/src/js/sampah_dashboard.js',
+            'sirita_sampah/static/src/xml/sampah_dashboard.xml',
+        ],
+    },
     'installable': True,
     'application': True,
     'auto_install': False,

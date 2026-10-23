@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_sampah_dashboard" model="ir.actions.client">
+        <field name="name">Bank Sampah Dashboard</field>
+        <field name="tag">sirita_sampah.dashboard</field>
+    </record>
+</odoo>

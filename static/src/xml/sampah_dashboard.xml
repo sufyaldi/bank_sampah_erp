@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="sirita_sampah.SampahDashboard">
+    <div class="o_sampah_layout" t-att-class="{'o_sidebar_collapsed': this.state.sidebarCollapsed}">
+
+        <!-- ================================================================ -->
+        <!--  LEFT COLLAPSIBLE SIDEBAR: BANK SAMPAH SAAS HIERARCHY             -->
+        <!-- ================================================================ -->
+        <aside class="o_sampah_sidebar">
+            
+            <!-- Brand Section -->
+            <div class="o_sampah_side_brand">
+                <div class="o_sampah_brand_icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 4 23 10 17 10"/>
+                        <polyline points="1 20 1 14 7 14"/>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                    </svg>
+                </div>
+                <div class="o_sampah_brand_text">
+                    <span class="o_sampah_brand_name">Bank Sampah</span>
+                    <span class="o_sampah_brand_sub">Green Campus</span>
+                </div>
+            </div>
+
+            <!-- App Launcher Button (Daftar Modul) -->
+            <button type="button" class="o_sampah_back_link" t-on-click.prevent="this.onOpenAppDrawer" title="Buka Semua Aplikasi / Modul Odoo">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+                    <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+                    <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+                </svg>
+                <span class="o_sampah_nav_text">Daftar Modul</span>
+            </button>
+
+            <!-- Navigation Links -->
+            <nav class="o_sampah_nav_list">
+                
+                <!-- 1. Monitoring / Dashboard Utama -->
+                <a href="#" role="button" 
+                   t-attf-class="o_sampah_nav_item #{this.state.activeMenu === 'monitoring' ? 'o_active' : ''}"
+                   t-on-click.prevent="() => this.onNavigateMenu('monitoring', null)"
+                   title="Dashboard Ringkasan">
+                    <div class="o_sampah_nav_left_wrap">
+                        <span class="o_sampah_nav_icon_wrap">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7"/>
+                                <rect x="14" y="3" width="7" height="7"/>
+                                <rect x="14" y="14" width="7" height="7"/>
+                                <rect x="3" y="14" width="7" height="7"/>
+                            </svg>
+                        </span>
+                        <span class="o_sampah_nav_text">Monitoring Utama</span>
+                    </div>
+                </a>
+
+                <!-- SECTION: OPERASIONAL -->
+                <div class="o_sampah_section_label">Operasional &amp; Transaksi</div>
+
+                <!-- 2. Accordion: Operasional -->
+                <div class="o_sampah_nav_group">
+                    <div t-attf-class="o_sampah_nav_parent #{this.state.expandedParents['operasional'] ? 'o_open' : ''}"
+                         t-on-click="() => this.toggleParent('operasional')">
+                        <div class="o_sampah_nav_left_wrap">
+                            <span class="o_sampah_nav_icon_wrap">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                            </span>
+                            <span class="o_sampah_nav_text">Operasional</span>
+                        </div>
+                        <span class="o_sampah_accordion_caret">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <div class="o_sampah_sub_nav_list" t-if="this.state.expandedParents['operasional']">
+                        <div class="o_sampah_sub_item" t-on-click="() => this.openAction('action_sampah_transaction')">
+                            <span>Setor Sampah (Timbangan)</span>
+                        </div>
+                        <div class="o_sampah_sub_item" t-on-click="() => this.openAction('action_sampah_pickup_task')">
+                            <span>Tugas Penjemputan</span>
+                        </div>
+                        <div class="o_sampah_sub_item" t-on-click="() => this.openAction('action_sampah_withdrawal')">
+                            <span>Penarikan Poin / Saldo</span>
+                        </div>
+                        <div class="o_sampah_sub_item" t-on-click="() => this.openAction('action_sampah_attendance')">
+                            <span>Presensi Petugas</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION: KEANGGOTAAN -->
+                <div class="o_sampah_section_label">Civitas &amp; Anggota</div>
+
+                <!-- 3. Accordion: Keanggotaan -->
+                <div class="o_sampah_nav_group">
+                    <div t-attf-class="o_sampah_nav_parent #{this.state.expandedParents['keanggotaan'] ? 'o_open' : ''}"
+                         t-on-click="() => this.toggleParent('keanggotaan')">
+                        <div class="o_sampah_nav_left_wrap">
+                            <span class="o_sampah_nav_icon_wrap">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                            </span>
+                            <span class="o_sampah_nav_text">Keanggotaan</span>
+                        </div>
+                        <span class="o_sampah_accordion_caret">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <div class="o_sampah_sub_nav_list" t-if="this.state.expandedParents['keanggotaan']">
+                        <div class="o_sampah_sub_item" t-on-click="() => this.openAction('action_sampah_nasabah')">
+                            <span>Data Nasabah</span>
+                        </div>
+                        <div class="o_sampah_sub_item" t-on-click="() => this.openAction('action_sampah_petugas')">
+                            <span>Petugas Lapangan</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION: MASTER DATA -->
+                <div class="o_sampah_section_label">Konfigurasi</div>
+
+                <!-- 4. Accordion: Master -->
+                <div class="o_sampah_nav_group">
+                    <div t-attf-class="o_sampah_nav_parent #{this.state.expandedParents['master'] ? 'o_open' : ''}"
+                         t-on-click="() => this.toggleParent('master')">
+                        <div class="o_sampah_nav_left_wrap">
+                            <span class="o_sampah_nav_icon_wrap">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                                </svg>
+                            </span>
+                            <span class="o_sampah_nav_text">Master Data</span>
+                        </div>
+                        <span class="o_sampah_accordion_caret">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <div class="o_sampah_sub_nav_list" t-if="this.state.expandedParents['master']">
+                        <div class="o_sampah_sub_item" t-on-click="() => this.openAction('action_sampah_category')">
+                            <span>Kategori Jenis Sampah</span>
+                        </div>
+                        <div class="o_sampah_sub_item" t-on-click="() => this.openAction('action_sampah_drop_point')">
+                            <span>Titik Drop Point Kampus</span>
+                        </div>
+                    </div>
+                </div>
+
+            </nav>
+
+            <!-- Sidebar Footer (Collapse Toggle) -->
+            <div class="o_sampah_side_footer">
+                <button type="button" class="o_sampah_collapse_toggle" t-on-click="this.toggleSidebar" title="Ciutkan / Lebarkan Sidebar">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="11 17 6 12 11 7"/>
+                        <polyline points="18 17 13 12 18 7"/>
+                    </svg>
+                    <span class="o_sampah_nav_text">Ciutkan Menu</span>
+                </button>
+            </div>
+
+        </aside>
+
+        <!-- ================================================================ -->
+        <!--  MAIN CONTENT                                                    -->
+        <!-- ================================================================ -->
+        <main class="o_sampah_main_content">
+            
+            <!-- Modern Topbar -->
+            <header class="o_sampah_topbar">
+                <div class="o_sampah_topbar_left">
+                    <button type="button" class="o_sampah_hamburger_btn" t-on-click="this.toggleSidebar" title="Toggle Sidebar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="o_sampah_breadcrumb_trail">
+                        <span class="text-muted">Bank Sampah</span>
+                        <span class="text-muted mx-1">/</span>
+                        <span class="fw-bold text-dark">Ringkasan Operasional &amp; Sirkular</span>
+                    </div>
+                </div>
+
+                <div class="o_sampah_topbar_right">
+                    <div class="o_sampah_user_badge">
+                        <div class="o_sampah_user_avatar">BS</div>
+                        <span>Green Campus</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Body -->
+            <div class="o_sampah_dashboard_body">
+                
+                <!-- Title box -->
+                <div class="o_sampah_dash_title_box">
+                    <div class="o_sampah_dash_accent_bar"/>
+                    <div>
+                        <h1 class="o_sampah_dash_title">Dashboard Bank Sampah Terintegrasi</h1>
+                        <p class="o_sampah_dash_subtitle">Monitoring reduksi sampah, partisipasi civitas, dan perputaran poin ekonomi sirkular IAIN Parepare.</p>
+                    </div>
+                </div>
+
+                <!-- 4 KPI Metrics Grid -->
+                <div class="o_sampah_metrics_grid">
+                    
+                    <!-- Card 1: Total Nasabah -->
+                    <div class="o_sampah_metric_card">
+                        <div class="o_sampah_metric_info">
+                            <span class="o_sampah_metric_label">Total Nasabah Terdaftar</span>
+                            <span class="o_sampah_metric_value" t-out="this.state.statistics.total_nasabah"/>
+                            <span class="o_sampah_metric_trend">Mahasiswa, Dosen &amp; Tendik</span>
+                        </div>
+                        <div class="o_sampah_metric_icon o_sampah_icon_emerald">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Total Timbulan Sampah Tereduksi -->
+                    <div class="o_sampah_metric_card">
+                        <div class="o_sampah_metric_info">
+                            <span class="o_sampah_metric_label">Sampah Tereduksi (Kg)</span>
+                            <span class="o_sampah_metric_value" t-out="this.state.statistics.total_weight"/>
+                            <span class="o_sampah_metric_trend">Total Akumulasi Timbangan</span>
+                        </div>
+                        <div class="o_sampah_metric_icon o_sampah_icon_teal">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="23 4 23 10 17 10"/>
+                                <polyline points="1 20 1 14 7 14"/>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Poin Beredar -->
+                    <div class="o_sampah_metric_card">
+                        <div class="o_sampah_metric_info">
+                            <span class="o_sampah_metric_label">Total Poin Beredar</span>
+                            <span class="o_sampah_metric_value" t-out="this.state.statistics.total_points"/>
+                            <span class="o_sampah_metric_trend">Dapat Ditarik / Potong Tagihan</span>
+                        </div>
+                        <div class="o_sampah_metric_icon o_sampah_icon_amber">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>
+                                <path d="M12 18V6"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Antrean Penjemputan -->
+                    <div class="o_sampah_metric_card">
+                        <div class="o_sampah_metric_info">
+                            <span class="o_sampah_metric_label">Tugas Jemput Aktif</span>
+                            <span class="o_sampah_metric_value" t-out="this.state.statistics.active_pickups"/>
+                            <span class="o_sampah_metric_trend">Kurir Lapangan Bergerak</span>
+                        </div>
+                        <div class="o_sampah_metric_icon o_sampah_icon_blue">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="3" width="15" height="13"/>
+                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                                <circle cx="5.5" cy="18.5" r="2.5"/>
+                                <circle cx="18.5" cy="18.5" r="2.5"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Kategori Sampah Card -->
+                <div class="o_sampah_card">
+                    <div class="o_sampah_card_header">
+                        <div>
+                            <h3 class="o_sampah_card_title">Kategori Jenis Sampah Terkelola</h3>
+                            <p class="o_sampah_card_subtitle">Rasio perolehan poin per kilogram dan kontribusi berat sampah.</p>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-success" t-on-click="() => this.openAction('action_sampah_category')">
+                            Kelola Kategori &amp; Tarif
+                        </button>
+                    </div>
+                    <div class="o_sampah_table_wrapper">
+                        <table class="o_sampah_flat_table">
+                            <thead>
+                                <tr>
+                                    <th>Kategori Sampah</th>
+                                    <th>Rasio Poin</th>
+                                    <th>Total Terkumpul</th>
+                                    <th>Status Lingkungan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="this.state.statistics.categories_data" t-as="cat" t-key="cat.name">
+                                    <tr>
+                                        <td class="fw-bold text-dark" t-out="cat.name"/>
+                                        <td><span class="badge bg-success-subtle text-success px-2 py-1 rounded" t-out="cat.point_rate + ' Poin/Kg'"/></td>
+                                        <td><span class="fw-semibold" t-out="cat.weight + ' Kg'"/></td>
+                                        <td><span class="badge bg-info-subtle text-info px-2 py-1 rounded">Didaur Ulang</span></td>
+                                    </tr>
+                                </t>
+                                <tr t-if="!this.state.statistics.categories_data.length">
+                                    <td colspan="4" class="text-center text-muted py-4">Belum ada data transaksi timbangan sampah yang diselesaikan.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Quick Action Shortcuts -->
+                <div class="o_sampah_quick_grid">
+                    <div class="o_sampah_quick_card" t-on-click="() => this.openAction('action_sampah_transaction')">
+                        <div class="o_sampah_quick_icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="12" y1="18" x2="12" y2="12"/>
+                                <line x1="9" y1="15" x2="15" y2="15"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="o_sampah_quick_label">Catat Timbangan</span>
+                            <span class="o_sampah_quick_sub">Input setor sampah baru</span>
+                        </div>
+                    </div>
+
+                    <div class="o_sampah_quick_card" t-on-click="() => this.openAction('action_sampah_pickup_task')">
+                        <div class="o_sampah_quick_icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="3" width="15" height="13"/>
+                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                                <circle cx="5.5" cy="18.5" r="2.5"/>
+                                <circle cx="18.5" cy="18.5" r="2.5"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="o_sampah_quick_label">Tugas Kurir</span>
+                            <span class="o_sampah_quick_sub">Kelola jadwal jemput</span>
+                        </div>
+                    </div>
+
+                    <div class="o_sampah_quick_card" t-on-click="() => this.openAction('action_sampah_withdrawal')">
+                        <div class="o_sampah_quick_icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>
+                                <path d="M12 18V6"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="o_sampah_quick_label">Klaim Poin / Saldo</span>
+                            <span class="o_sampah_quick_sub">Verifikasi penarikan</span>
+                        </div>
+                    </div>
+
+                    <div class="o_sampah_quick_card" t-on-click="() => this.openAction('action_sampah_drop_point')">
+                        <div class="o_sampah_quick_icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="o_sampah_quick_label">Drop Point GPS</span>
+                            <span class="o_sampah_quick_sub">Lokasi tong terpilah</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+        <!-- ================================================================ -->
+        <!--  ENTERPRISE / SAAS APP LAUNCHER MODAL OVERLAY                     -->
+        <!-- ================================================================ -->
+        <t t-if="this.state.showAppDrawer">
+            <div class="o_sampah_app_drawer_backdrop" t-on-click.self="this.onCloseAppDrawer">
+                <div class="o_sampah_app_drawer_modal">
+                    
+                    <!-- Header with Live Search & Close -->
+                    <div class="o_sampah_drawer_header">
+                        <div class="o_sampah_drawer_search_wrap">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                            <input type="text" 
+                                   class="o_sampah_drawer_search_input" 
+                                   placeholder="Cari modul atau aplikasi..." 
+                                   t-att-value="this.state.appSearchTerm" 
+                                   t-on-input="this.onAppSearchInput"
+                                   autofocus="autofocus"/>
+                        </div>
+                        <button type="button" class="o_sampah_drawer_close_btn" t-on-click="this.onCloseAppDrawer" title="Tutup">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Responsive Squircle Icon Grid -->
+                    <div class="o_sampah_drawer_grid_container">
+                        <div class="o_sampah_drawer_grid">
+                            <t t-foreach="this.getAppsList()" t-as="app" t-key="app.id">
+                                <div class="o_sampah_drawer_app_card" t-on-click="() => this.onSelectApp(app)">
+                                    <div class="o_sampah_drawer_icon_box">
+                                        <img t-if="app.webIconData" t-att-src="app.webIconData" class="o_sampah_drawer_icon_img" alt="icon"/>
+                                        <i t-elif="app.webIcon" class="oi oi-2x" t-att-data-icon="app.webIcon.split(',')[0]" t-att-style="'color:' + app.webIcon.split(',')[1]"/>
+                                        <i t-else="" class="oi oi-2x text-success" data-icon="apps"/>
+                                    </div>
+                                    <span class="o_sampah_drawer_app_label" t-out="app.name"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </t>
+
+    </div>
+</t>
+
+</templates>
