@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="sirita_sampah.SampahDashboard">
-    <div class="o_sampah_layout" t-att-class="{'o_sidebar_collapsed': this.state.sidebarCollapsed}">
+    <div class="o_sampah_layout sampah_dashboard" t-att-class="{'o_sidebar_collapsed': this.state.sidebarCollapsed}">
 
         <!-- ================================================================ -->
         <!--  LEFT COLLAPSIBLE SIDEBAR: BANK SAMPAH SAAS HIERARCHY             -->

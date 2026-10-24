@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, onWillStart, onMounted, proxy } from "@odoo/owl";
+import { Component, onWillStart, onMounted, onWillUnmount, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -41,6 +41,10 @@ class SampahDashboard extends Component {
 
         onMounted(() => {
             document.body.classList.add("sampah_dashboard");
+        });
+
+        onWillUnmount(() => {
+            document.body.classList.remove("sampah_dashboard");
         });
     }
 
@@ -119,5 +123,7 @@ class SampahDashboard extends Component {
         }
     }
 }
+
+SampahDashboard.template = "sirita_sampah.SampahDashboard";
 
 registry.category("actions").add("sirita_sampah.dashboard", SampahDashboard);
