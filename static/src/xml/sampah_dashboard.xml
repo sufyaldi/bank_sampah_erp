@@ -426,7 +426,6 @@
                                 <div class="o_sampah_drawer_app_card" t-on-click="() => this.onSelectApp(app)">
                                     <div class="o_sampah_drawer_icon_box">
                                         <img t-if="app.webIconData" t-att-src="app.webIconData" class="o_sampah_drawer_icon_img" alt="icon"/>
-                                        <i t-elif="app.webIcon" class="oi oi-2x" t-att-data-icon="app.webIcon.split(',')[0]" t-att-style="'color:' + app.webIcon.split(',')[1]"/>
                                         <i t-else="" class="oi oi-2x text-success" data-icon="apps"/>
                                     </div>
                                     <span class="o_sampah_drawer_app_label" t-out="app.name"/>
